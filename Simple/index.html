@@ -75,8 +75,7 @@ a{color:#E2C06E}a:hover{color:#F0D48E}
 </li>
 </ul>
 
-<!-- NOTA: Modificato qui sotto (aggiunto onClick="{{trackLead}}" e target="_blank") -->
-<a href="https://t.me/+5f4VaqEFxC02MWM0" target="_blank" onClick="{{trackLead}}" style="display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 72px; padding: 0 28px; border-radius: 16px; background: {{accent}}; color: #1A1408; text-decoration: none; font-size: clamp(17px, 1.7vw, 21px); font-weight: 800; letter-spacing: 0.01em; text-transform: uppercase; box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 40px -6px rgba(212,175,90,0.55)">
+<a href="https://t.me/+5f4VaqEFxC02MWM0" onClick="{{trackLead}}" style="display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 72px; padding: 0 28px; border-radius: 16px; background: {{accent}}; color: #1A1408; text-decoration: none; font-size: clamp(17px, 1.7vw, 21px); font-weight: 800; letter-spacing: 0.01em; text-transform: uppercase; box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 40px -6px rgba(212,175,90,0.55)">
 Entra nel gruppo Telegram
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
 </a>
@@ -113,12 +112,11 @@ Entra nel gruppo Telegram
 </div>
 </x-dc>
 
-<!-- NOTA: Modificato qui sotto (aggiunta funzione trackLead) -->
 <script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#D4AF5A","options":["#D4AF5A","#E6C77A","#C9A24B","#B8913A"]},"$preview":{"width":1440,"height":1200}}'>
 class Component extends DCLogic {
   trackLead() {
     if (typeof fbq !== 'undefined') {
-      fbq('track', 'Lead');
+      fbq('trackCustom', 'ClickTelegram');
     }
   }
 
@@ -129,6 +127,37 @@ class Component extends DCLogic {
     };
   }
 }
+</script>
+
+<!-- TG Tracker & Fallback Scripts -->
+<script id="tgtrc-script"
+  src="https://dash.tgtracker.io/api/v2/button-script.js"
+  async
+  data-target-url="https://j2YiI.yourpts.com"
+  data-target-tme="true"
+  data-target-fbp="1613862393869932"></script>
+
+<script>
+(function () {
+  var FALLBACK = 'https://t.me/+5f4VaqEFxC02MWM0';
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href*="yourpts.com"], a[href*="t.me/"]') : null;
+    if (!a) return;
+    e.preventDefault();
+    var url = a.href;
+    setTimeout(function () { location.href = url; }, 300);
+    setTimeout(function () {
+      if (document.hidden || document.getElementById('tg-fallback')) return;
+      var b = document.createElement('button');
+      b.id = 'tg-fallback';
+      b.type = 'button';
+      b.textContent = 'Telegram non si apre? Tocca qui';
+      b.style.cssText = 'display:block;margin:16px auto 0;padding:12px 22px;border-radius:14px;border:1px solid #D4AF5A;background:transparent;color:#D4AF5A;font:600 15px Manrope,Inter,sans-serif;cursor:pointer';
+      b.onclick = function () { location.href = FALLBACK; };
+      a.insertAdjacentElement('afterend', b);
+    }, 2500);
+  });
+})();
 </script>
 </body>
 </html>
